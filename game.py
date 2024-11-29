@@ -15,9 +15,6 @@ def app():
     if "game_data" not in st.session_state:
         st.session_state.game_data = []  # To store game statistics
 
-    if "show_tips" not in st.session_state:
-        st.session_state.show_tips = False  # Default to hints OFF
-
     st.write("I have selected a number between 1 and 100. Can you guess it?")
 
     # User input for guessing
@@ -25,34 +22,23 @@ def app():
         "Enter your guess:", min_value=1, max_value=100, step=1, format="%d"
     )
 
-    # Toggle hints
-    if st.button("I want quality hints"):
-        st.session_state.show_tips = not st.session_state.show_tips
-
-    # Display hint state
-    if st.session_state.show_tips:
-        st.info("Hints are currently ON!")
-    else:
-        st.info("Hints are currently OFF!")
-
     # Submit guess
     if st.button("Submit Guess"):
         st.session_state.attempts += 1  # Increment attempts on submission
 
-        # Hint logic (only applies if hints are ON)
-        if st.session_state.show_tips:
-            difference = abs(user_guess - st.session_state.random_number)
-            if difference < 7:
-                grade = "A"
-            elif difference < 20:
-                grade = "B"
-            elif difference < 30:
-                grade = "C"
-            elif difference < 45:
-                grade = "D"
-            else:
-                grade = "F"
-            st.write(f"Hint Grade: {grade}")  # Display hint grade
+        # Hint logic (always active)
+        difference = abs(user_guess - st.session_state.random_number)
+        if difference < 7:
+            grade = "A"
+        elif difference < 20:
+            grade = "B"
+        elif difference < 30:
+            grade = "C"
+        elif difference < 45:
+            grade = "D"
+        else:
+            grade = "F"
+        st.write(f"Hint Grade: {grade}")  # Always display hint grade
 
         # Evaluate the guess
         if user_guess < st.session_state.random_number:
