@@ -48,7 +48,7 @@ def app():
                 grade = "D"
             # grades are assigned based on how far off the user is to the secret number
             
-            st.write(f"Hint grade: {grade}")
+            st.session_state.grade
         #st.write("Difference: ", (user_guess - st.session_state.random_number))
         st.session_state.attempts += 1
         if user_guess < st.session_state.random_number:
