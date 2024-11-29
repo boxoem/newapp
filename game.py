@@ -5,7 +5,7 @@ import streamlit as st
 def app():
     st.title("Guessing Game")
 
-    # State management for the random number
+    # Initialize state variables
     if "random_number" not in st.session_state:
         st.session_state.random_number = random.randint(1, 100)
 
@@ -16,17 +16,16 @@ def app():
         st.session_state.game_data = []  # To store game statistics
 
     if "show_tips" not in st.session_state:
-        # This session_state variable is needed to store if the user wants an estimation of their guess
-        st.session_state.show_tips = False
+        st.session_state.show_tips = False  # Default to hints OFF
 
     st.write("I have selected a number between 1 and 100. Can you guess it?")
-    
+
     # User input for guessing
     user_guess = st.number_input(
         "Enter your guess:", min_value=1, max_value=100, step=1, format="%d"
     )
-    
-    # Button to toggle hints
+
+    # Toggle hints
     if st.button("I want quality hints"):
         st.session_state.show_tips = not st.session_state.show_tips
 
@@ -37,12 +36,10 @@ def app():
         st.info("Hints are currently OFF!")
 
     # Submit guess
-    submit = st.button("Submit Guess")
+    if st.button("Submit Guess"):
+        st.session_state.attempts += 1  # Increment attempts on submission
 
-    if submit:
-        st.session_state.attempts += 1
-
-        # Hint logic
+        # Hint logic (only applies if hints are ON)
         if st.session_state.show_tips:
             difference = abs(user_guess - st.session_state.random_number)
             if difference < 7:
@@ -55,10 +52,9 @@ def app():
                 grade = "D"
             else:
                 grade = "F"
+            st.write(f"Hint Grade: {grade}")  # Display hint grade
 
-            st.write(f"Hint Grade: {grade}")
-
-        # Evaluate guess
+        # Evaluate the guess
         if user_guess < st.session_state.random_number:
             st.warning("Too low! Try again.")
         elif user_guess > st.session_state.random_number:
@@ -67,10 +63,10 @@ def app():
             st.success(
                 f"Correct! You guessed the number in {st.session_state.attempts} attempts."
             )
-            # Record the game statistics
+            # Record game statistics
             game_num = len(st.session_state.game_data) + 1
             st.session_state.game_data.append((game_num, st.session_state.attempts))
 
-            # Reset for a new game
+            # Reset game state for new game
             st.session_state.random_number = random.randint(1, 100)
             st.session_state.attempts = 0
