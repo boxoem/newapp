@@ -29,10 +29,12 @@ def app():
     # Button to toggle hints
     if st.button("I want quality hints"):
         st.session_state.show_tips = not st.session_state.show_tips
-        if st.session_state.show_tips:
-            st.info("Hints are now ON!")
-        else:
-            st.info("Hints are now OFF!")
+
+    # Display hint state
+    if st.session_state.show_tips:
+        st.info("Hints are currently ON!")
+    else:
+        st.info("Hints are currently OFF!")
 
     # Submit guess
     submit = st.button("Submit Guess")
